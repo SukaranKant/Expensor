@@ -3,6 +3,8 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const dotenv = require('dotenv')
+const passport = require('passport');
+const passportConfig = require('./config/passport')
 const authRoutes = require('./routes/auth')
 
 dotenv.config()
@@ -17,6 +19,9 @@ const app = express();
 app.use(bodyParser.json());
 app.use(express.json())
 app.use(cors())
+app.use(passport.initialize());
+passportConfig(passport);
+
 app.use('/auth', authRoutes)
 
 function connectToDatabase() {

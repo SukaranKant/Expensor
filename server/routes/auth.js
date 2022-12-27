@@ -3,6 +3,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user')
 const dotenv = require('dotenv')
+const passport = require('passport');
 
 dotenv.config()
 
@@ -84,6 +85,20 @@ router.post('/login', async (req, res) => {
         const authToken = jwt.sign(data, JWT_SECRET);
         res.json({authToken});
 
+
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).send("Internal Server Error");
+    }
+})
+
+
+// ************** FETCH USER DETAILS *************************************
+router.get('/getuser', passport.authenticate('jwt', {session: false}), async (req, res) => {    
+    try {
+    const userId = req.user.id;
+    const user = await User.findById(userId).select("-password")
+    res.json({user})
 
     } catch (error) {
         console.error(error.message);
