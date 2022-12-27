@@ -1,17 +1,14 @@
 import './App.css';
 import Navbar from './components/Navbar';
-import TransactionForm from './components/TransactionForm';
-import TransactionsList from './components/TransactionList';
-import { Container } from "@mui/system";
+import Home from './pages/Home';
+import Login from './pages/Login';
 
 function App() {
   return (
     <>
       <Navbar/>
-      <Container>
-      <TransactionForm/>
-      <TransactionsList/>
-      </Container>
+      {/* <Home/> */}
+      <Login/>
     </>
   );
 }
