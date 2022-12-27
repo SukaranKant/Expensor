@@ -4,6 +4,7 @@ import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
+import { Link } from 'react-router-dom';
 
 export default function Navbar() {
   return (
@@ -11,10 +12,10 @@ export default function Navbar() {
       <AppBar position="static">
         <Toolbar>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            Expensor
+          <Link to="/" style={{color: 'inherit', textDecoration: 'inherit'}}>Expensor</Link>
           </Typography>
-          <Button color="inherit">Login</Button>
-          <Button color="inherit">Signup</Button>
+          <Button color="inherit"><Link to="/login" style={{color: 'inherit', textDecoration: 'inherit'}}>Login</Link></Button>
+          <Button color="inherit"><Link to="/signup" style={{color: 'inherit', textDecoration: 'inherit'}}>Signup</Link></Button>
           <Button color="inherit">Logout</Button>
         </Toolbar>
       </AppBar>
