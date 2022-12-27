@@ -6,6 +6,7 @@ const dotenv = require('dotenv')
 const passport = require('passport');
 const passportConfig = require('./config/passport')
 const authRoutes = require('./routes/auth')
+const transactionRoutes = require('./routes/transaction')
 
 dotenv.config()
 
@@ -23,6 +24,7 @@ app.use(passport.initialize());
 passportConfig(passport);
 
 app.use('/auth', authRoutes)
+app.use('/transaction', transactionRoutes)
 
 function connectToDatabase() {
     try {
