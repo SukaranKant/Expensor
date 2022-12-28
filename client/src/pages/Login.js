@@ -10,7 +10,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import {useDispatch} from 'react-redux'
-import { login } from '../store/authSlice'
+import { loginUser } from '../store/authSlice'
 import {useNavigate} from 'react-router-dom';
 
 export default function Login() {
@@ -26,8 +26,8 @@ export default function Login() {
       password: data.get('password'),
     }
 
-    dispatch(login(formFields));   
-    navigate("/"); 
+    dispatch(loginUser(formFields));
+    navigate('/')
   };
 
   return (

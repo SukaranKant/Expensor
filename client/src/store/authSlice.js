@@ -10,19 +10,18 @@ export const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    loginSuccess(state) {
+    loginSuccess(state, action) {
       state.isAuthenticated = true;
+      state.user = action.payload.user;
     },
     logoutSuccess(state) {
       state.isAuthenticated = false;
+      state.user = null;
     },
-    setUser(state, action) {
-      state.user = action.payload.user;
-    }
   },
 })
 
-export const signup = (userData) =>{
+export const registerUser = (userData) =>{
   
   return async (dispatch) => {
     const response = await fetch(`${process.env.REACT_APP_API_URL}/auth/register`, {
@@ -42,11 +41,11 @@ export const signup = (userData) =>{
 
     // else set the auth token.
     Cookies.set('auth-token', responseData.authToken);
-    dispatch(authActions.loginSuccess());
+    dispatch(authActions.loginSuccess({user: responseData.user}));
   }
 }
 
-export const login = (userData) =>{
+export const loginUser = (userData) =>{
   
   return async (dispatch) => {
     const response = await fetch(`${process.env.REACT_APP_API_URL}/auth/login`, {
@@ -66,37 +65,10 @@ export const login = (userData) =>{
 
     // else set the auth token.
     Cookies.set('auth-token', responseData.authToken);
-    dispatch(authActions.loginSuccess());
+    dispatch(authActions.loginSuccess({user: responseData.user}));
   }
 }
 
-export const getUserDetails = ()=>{
-  return async (dispatch) => {
-    const token = Cookies.get('auth-token');
-
-    if(!token) {
-      console.log('invalid auth token')
-      return ;
-    }
-
-    const response = await fetch(`${process.env.REACT_APP_API_URL}/auth/getuser`, {
-      method: "GET",
-      headers: {
-        "content-type": "application/json",
-        "Authorization": `Bearer ${token}`,
-      },
-    });
-
-    const responseData = await response.json();
-    
-    if(!response.ok) {
-      console.log('token invalid')
-      return ;
-    }
-
-    dispatch(authActions.setUser({user: responseData.user}))
-  }
-}
 export const authActions = authSlice.actions
 
 

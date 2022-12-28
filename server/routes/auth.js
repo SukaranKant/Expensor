@@ -44,7 +44,7 @@ router.post('/register', async (req, res) => {
         }
 
         const authToken = jwt.sign(data, JWT_SECRET);
-        res.json({authToken});
+        res.json({authToken, user});
         
 
     } catch (error) {
@@ -83,7 +83,7 @@ router.post('/login', async (req, res) => {
         }
 
         const authToken = jwt.sign(data, JWT_SECRET);
-        res.json({authToken});
+        res.json({authToken, user});
 
 
     } catch (error) {
