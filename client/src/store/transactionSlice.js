@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import Cookies from "js-cookie";
 
 const initialState = {
   transactions: [],
@@ -23,7 +24,7 @@ const fetchDataFromServer = async () => {
     method: "GET",
     headers: {
       "content-type": "application/json",
-      Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjNhOWMzOTIxMzVjYzgyNTJjYzE3MjY4In0sImlhdCI6MTY3MjE1MDc3NH0.BC3RsNkMD0xpLhF1FcsqRvwfB56-U0mvbyq9I2eQukU`,
+      Authorization: `Bearer ${Cookies.get('auth-token')}`,
     },
   });
 
@@ -59,7 +60,7 @@ export const addTransaction = (transaction) => {
         body: JSON.stringify(transaction),
         headers: {
           "content-type": "application/json",
-          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjNhOWMzOTIxMzVjYzgyNTJjYzE3MjY4In0sImlhdCI6MTY3MjE1MDc3NH0.BC3RsNkMD0xpLhF1FcsqRvwfB56-U0mvbyq9I2eQukU`,
+          Authorization: `Bearer ${Cookies.get('auth-token')}`,
         },
       }
     );
@@ -91,7 +92,7 @@ export const updateTransaction = ({transaction, transactionId}) => {
         body: JSON.stringify(transaction),
         headers: {
           "content-type": "application/json",
-          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjNhOWMzOTIxMzVjYzgyNTJjYzE3MjY4In0sImlhdCI6MTY3MjE1MDc3NH0.BC3RsNkMD0xpLhF1FcsqRvwfB56-U0mvbyq9I2eQukU`,
+          Authorization: `Bearer ${Cookies.get('auth-token')}`,
         },
       }
     );
@@ -122,7 +123,7 @@ export const deleteTransaction = (transactionId) => {
         method: "DELETE",
         headers: {
           "content-type": "application/json",
-          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjNhOWMzOTIxMzVjYzgyNTJjYzE3MjY4In0sImlhdCI6MTY3MjE1MDc3NH0.BC3RsNkMD0xpLhF1FcsqRvwfB56-U0mvbyq9I2eQukU`,
+          Authorization: `Bearer ${Cookies.get('auth-token')}`,
         },
       }
     );
