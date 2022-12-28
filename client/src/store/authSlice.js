@@ -32,16 +32,6 @@ export const authSlice = createSlice({
       state.loading = false;
     },
   },
-  extraReducers: {
-    // [login.pending]: (state) => {
-    //   state.loading = true;
-    //   state.error = null;
-    // },
-    // [logout.pending]: (state) => {
-    //   state.loading = true;
-    //   state.error = null;
-    // },
-  },
 })
 
 // export const { } = authSlice.actions

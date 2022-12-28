@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, {useEffect} from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -12,21 +12,23 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import IconButton from "@mui/material/IconButton";
 import { red } from "@mui/material/colors";
 import dayjs from "dayjs";
+import { useDispatch, useSelector } from "react-redux"
+import { fetchTransactions } from "../store/transactionSlice";
 
 const formatDate = date => {
     return dayjs(date).format("DD/MM/YYYY");
 }
 
-let transactions = [
-    { amount: 1000, description: "some description", date : Date.now()},
-    { amount: 1000, description: "some description", date : Date.now()},
-    { amount: 1000, description: "some description", date : Date.now()},
-    { amount: 1000, description: "some description", date : Date.now()},
-    { amount: 1000, description: "some description", date : Date.now()},
-];
 
 export default function TransactionsList() {
+  const dispatch = useDispatch()
+  const transactionsList = useSelector((state) => state.transaction.transactions);
 
+  useEffect(() => {
+    dispatch(fetchTransactions());
+  }, [dispatch])
+  
+  
   return (
     <>
       <TableContainer component={Paper} sx={{ marginTop: 10 }}>
@@ -44,7 +46,7 @@ export default function TransactionsList() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {transactions.map((transaction) => (
+            {transactionsList.map((transaction) => (
               <TableRow
                 key={transaction._id}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
