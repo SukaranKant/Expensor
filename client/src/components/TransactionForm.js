@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
@@ -7,18 +7,32 @@ import { TextField } from "@mui/material";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { addTransaction } from "../store/transactionSlice";
+import { useDispatch } from "react-redux";
 
+const initialForm = {
+  amount: "",
+  description: "",
+  date: null,
+};
 
 const TransactionForm = () => {
-  
+  const [formFields, setFormFields] = useState(initialForm)
+  const dispatch = useDispatch();
+
   const handleChange = (event) => {
+    setFormFields({...formFields, [event.target.name]: event.target.value})
   };
 
   const handleDate = (newValue) => {
+    setFormFields({ ...formFields, date: newValue });
   };
 
   const formSubmitHandler =  (event) => {
     event.preventDefault();
+    console.log(formFields)
+    dispatch(addTransaction(formFields))
+    setFormFields(initialForm)
   };
 
   return (
@@ -35,6 +49,7 @@ const TransactionForm = () => {
               id="outlined-basic"
               label="Amount"
               name="amount"
+              value={formFields.amount}
               onChange={handleChange}
               variant="outlined"
               size="small"
@@ -45,6 +60,7 @@ const TransactionForm = () => {
               id="outlined-basic"
               label="Description"
               name="description"
+              value={formFields.description}
               size="small"
               variant="outlined"
             />
@@ -53,6 +69,7 @@ const TransactionForm = () => {
                 label="Transaction Date"
                 inputFormat="MM/DD/YYYY"
                 name="date"
+                value={formFields.date}
                 onChange={handleDate}
                 renderInput={(params) => (
                   <TextField sx={{ marginRight: 5 }} size="small" {...params} />

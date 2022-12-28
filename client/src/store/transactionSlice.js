@@ -33,9 +33,40 @@ const fetchDataFromServer = async () => {
   return data;
 };
 
-
 export const fetchTransactions = () => {
   return async (dispatch) => {
+    try {
+      const data = await fetchDataFromServer();
+      dispatch(
+        transactionActions.replaceTransactions({
+          transactions: data.transactions || [],
+        })
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+};
+
+export const addTransaction = (transaction) => {
+  return async (dispatch) => {
+    const response = await fetch(
+      `${process.env.REACT_APP_API_URL}/transaction`,
+      {
+        method: "POST",
+        body: JSON.stringify(transaction),
+        headers: {
+          "content-type": "application/json",
+          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjNhOWMzOTIxMzVjYzgyNTJjYzE3MjY4In0sImlhdCI6MTY3MjE1MDc3NH0.BC3RsNkMD0xpLhF1FcsqRvwfB56-U0mvbyq9I2eQukU`,
+        },
+      }
+    );
+
+    if (!response.ok) {
+      console.log("could not add transaction");
+      return;
+    }
+
     try {
       const data = await fetchDataFromServer();
       dispatch(
