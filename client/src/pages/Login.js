@@ -9,15 +9,25 @@ import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
+import {useDispatch} from 'react-redux'
+import { login } from '../store/authSlice'
+import {useNavigate} from 'react-router-dom';
 
 export default function Login() {
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
+ 
+    const formFields = {
       email: data.get('email'),
       password: data.get('password'),
-    });
+    }
+
+    dispatch(login(formFields));   
+    navigate("/"); 
   };
 
   return (
