@@ -16,6 +16,11 @@ function App() {
   const token = Cookies.get("auth-token");
 
   const getUserDetails = async () => {
+      if(!token) { 
+        navigate('/login');
+        return ;
+      }
+
       const response = await fetch(
         `${process.env.REACT_APP_API_URL}/auth/getuser`,
         {
