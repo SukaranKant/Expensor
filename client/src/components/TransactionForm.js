@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
@@ -7,8 +7,8 @@ import { TextField } from "@mui/material";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { addTransaction } from "../store/transactionSlice";
-import { useDispatch } from "react-redux";
+import { addTransaction, updateTransaction, transactionActions } from "../store/transactionSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 const initialForm = {
   amount: "",
@@ -18,7 +18,18 @@ const initialForm = {
 
 const TransactionForm = () => {
   const [formFields, setFormFields] = useState(initialForm)
+
   const dispatch = useDispatch();
+
+  const existingTransaction = useSelector(state => state.transaction.existingTransaction)
+  
+  useEffect(() => {
+    if(existingTransaction) {
+      setFormFields({...existingTransaction})
+    }
+
+  }, [existingTransaction])
+  
 
   const handleChange = (event) => {
     setFormFields({...formFields, [event.target.name]: event.target.value})
@@ -30,8 +41,17 @@ const TransactionForm = () => {
 
   const formSubmitHandler =  (event) => {
     event.preventDefault();
-    console.log(formFields)
-    dispatch(addTransaction(formFields))
+
+    if(!existingTransaction) {
+      dispatch(addTransaction(formFields))
+    }
+    else {
+      // async call to updateAPI.
+      dispatch(updateTransaction({transaction: formFields, transactionId: existingTransaction._id}))
+
+      dispatch(transactionActions.setExistingTransaction({existingTransaction: null}))
+    }
+
     setFormFields(initialForm)
   };
 
@@ -84,6 +104,15 @@ const TransactionForm = () => {
             >
               Submit
             </Button>
+            { existingTransaction && <Button
+              size="medium"
+              type="submit"
+              color="success"
+              variant="contained"
+              sx={{ marginX: 2 }}
+            >
+              Add instead
+            </Button>}
 
           </form>
         </CardContent>

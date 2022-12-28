@@ -13,7 +13,8 @@ import IconButton from "@mui/material/IconButton";
 import { red } from "@mui/material/colors";
 import dayjs from "dayjs";
 import { useDispatch, useSelector } from "react-redux"
-import { fetchTransactions } from "../store/transactionSlice";
+import { fetchTransactions, deleteTransaction } from "../store/transactionSlice";
+import { transactionActions } from '../store/transactionSlice'
 
 const formatDate = date => {
     return dayjs(date).format("DD/MM/YYYY");
@@ -28,6 +29,17 @@ export default function TransactionsList() {
     dispatch(fetchTransactions());
   }, [dispatch])
   
+  const deleteTransactionHandler = (transactionId) =>{
+    if ( window.confirm('Are you sure you want to delete?') ) {
+      dispatch(deleteTransaction(transactionId));
+    }
+  }
+
+  const editTransactionHandler = (transaction)=>{
+    dispatch(transactionActions.setExistingTransaction(
+      {existingTransaction: transaction }
+    ));
+  }
   
   return (
     <>
@@ -58,15 +70,13 @@ export default function TransactionsList() {
                 <TableCell align="center">{formatDate(transaction.date)}</TableCell>
                 <TableCell align="center">
 
-                  <IconButton component="label">
+                  <IconButton component="label" onClick={() => editTransactionHandler(transaction)}>
                     <EditIcon color="success" />
                   </IconButton>
 
-                  <IconButton
-                    component="label"
-                  >
+                  <IconButton component="label" onClick={ () => deleteTransactionHandler(transaction._id) }>
                     <DeleteIcon sx={{ color: red[500] }} />
-                  </IconButton>
+                  </IconButton> 
                 </TableCell>
               </TableRow>
             ))}

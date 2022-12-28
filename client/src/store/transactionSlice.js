@@ -2,8 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   transactions: [],
-  error: null,
-  loading: false,
+  existingTransaction: null,
 };
 
 export const transactionSlice = createSlice({
@@ -13,6 +12,9 @@ export const transactionSlice = createSlice({
     replaceTransactions(state, action) {
       state.transactions = action.payload.transactions;
     },
+    setExistingTransaction(state, action) {
+      state.existingTransaction = action.payload.existingTransaction;
+    }
   },
 });
 
@@ -80,6 +82,68 @@ export const addTransaction = (transaction) => {
   };
 };
 
+export const updateTransaction = ({transaction, transactionId}) => {
+  return async (dispatch) => {
+    const response = await fetch(
+      `${process.env.REACT_APP_API_URL}/transaction/${transactionId}`,
+      {
+        method: "PATCH",
+        body: JSON.stringify(transaction),
+        headers: {
+          "content-type": "application/json",
+          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjNhOWMzOTIxMzVjYzgyNTJjYzE3MjY4In0sImlhdCI6MTY3MjE1MDc3NH0.BC3RsNkMD0xpLhF1FcsqRvwfB56-U0mvbyq9I2eQukU`,
+        },
+      }
+    );
+
+    if (!response.ok) {
+      console.log("could not update transaction");
+      return;
+    }
+
+    try {
+      const data = await fetchDataFromServer();
+      dispatch(
+        transactionActions.replaceTransactions({
+          transactions: data.transactions || [],
+        })
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+};
+
+export const deleteTransaction = (transactionId) => {
+  return async (dispatch) => {
+    const response = await fetch(
+      `${process.env.REACT_APP_API_URL}/transaction/${transactionId}`,
+      {
+        method: "DELETE",
+        headers: {
+          "content-type": "application/json",
+          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjNhOWMzOTIxMzVjYzgyNTJjYzE3MjY4In0sImlhdCI6MTY3MjE1MDc3NH0.BC3RsNkMD0xpLhF1FcsqRvwfB56-U0mvbyq9I2eQukU`,
+        },
+      }
+    );
+
+    if (!response.ok) {
+      console.log("could not delete transaction");
+      return;
+    }
+
+    try {
+      const data = await fetchDataFromServer();
+      dispatch(
+        transactionActions.replaceTransactions({
+          transactions: data.transactions || [],
+        })
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+};
 
 export const transactionActions = transactionSlice.actions;
 
