@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { authActions } from "./authSlice";
 import Cookies from "js-cookie";
 
 const initialState = {
@@ -66,6 +67,10 @@ export const addTransaction = (transaction) => {
     );
 
     if (!response.ok) {
+      if(response.status === 401) {
+        console.log("unauthorized")
+        dispatch(authActions.logoutSuccess());
+      }
       console.log("could not add transaction");
       return;
     }
@@ -98,6 +103,10 @@ export const updateTransaction = ({transaction, transactionId}) => {
     );
 
     if (!response.ok) {
+      if(response.status === 401) {
+        console.log("unauthorized")
+        dispatch(authActions.logoutSuccess());
+      }
       console.log("could not update transaction");
       return;
     }
@@ -129,6 +138,10 @@ export const deleteTransaction = (transactionId) => {
     );
 
     if (!response.ok) {
+      if(response.status === 401) {
+        console.log("unauthorized")
+        dispatch(authActions.logoutSuccess());
+      }
       console.log("could not delete transaction");
       return;
     }
