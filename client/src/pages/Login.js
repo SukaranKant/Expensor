@@ -10,14 +10,38 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import {useDispatch } from 'react-redux'
-import { loginUser } from '../store/authSlice'
 import {useNavigate} from 'react-router-dom';
+import { authActions } from '../store/authSlice';
+import Cookies from 'js-cookie';
 
 export default function Login() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
-  const handleSubmit = (event) => {
+  const loginUser = async (userData) =>{  
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/auth/login`, {
+        method: "POST",
+        body: JSON.stringify(userData),
+        headers: {
+          "content-type": "application/json",
+        },
+      });
+  
+      const responseData = await response.json();
+      
+      if(!response.ok) {
+        console.log('could not login')
+        return ;
+      }
+  
+      // else set the auth token.
+      Cookies.set('auth-token', responseData.authToken);
+      dispatch(authActions.loginSuccess({user: responseData.user}));
+      navigate('/');
+    }
+
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
  
@@ -26,8 +50,7 @@ export default function Login() {
       password: data.get('password'),
     }
 
-    dispatch(loginUser(formFields));
-    navigate('/')
+    await loginUser(formFields);
   };
 
   return (

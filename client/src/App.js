@@ -7,7 +7,7 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import { useDispatch } from "react-redux";
 import Cookies from "js-cookie";
-import { loginUser } from "./store/authSlice";
+import { authActions } from "./store/authSlice";
 import CheckAuth from './utils/CheckAuth'
 
 function App() {
@@ -16,11 +16,6 @@ function App() {
   const token = Cookies.get("auth-token");
 
   const getUserDetails = async () => {
-      if(!token) { 
-        navigate('/login');
-        return ;
-      }
-
       const response = await fetch(
         `${process.env.REACT_APP_API_URL}/auth/getuser`,
         {
@@ -34,20 +29,23 @@ function App() {
   
       if (response.ok) {
         const responseData = await response.json();
-        dispatch(loginUser({ user: responseData.user }));
+        dispatch(authActions.loginSuccess({ user: responseData.user }));
       }
       else {
         navigate('/login');
+        return ;
       }
     }
   
   useEffect(() => {
-    try {
-      getUserDetails();
-    } catch (error) {
-      console.log(error);
+    if(!token) {
+      // if token is not present, then redirect to login page
       navigate('/login');
+      return ;
     }
+
+    // if token is present, then validate it.
+    getUserDetails()
   }, []);
 
   return (

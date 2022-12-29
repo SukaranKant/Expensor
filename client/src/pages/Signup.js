@@ -11,13 +11,36 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { registerUser } from '../store/authSlice';
+import Cookies from 'js-cookie';
+import { authActions } from '../store/authSlice';
 
 export default function Signup() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
-  const handleSubmit = (event) => {
+  const registerUser = async (userData) =>{  
+    const response = await fetch(`${process.env.REACT_APP_API_URL}/auth/register`, {
+      method: "POST",
+      body: JSON.stringify(userData),
+      headers: {
+        "content-type": "application/json",
+      },
+    });
+
+    const responseData = await response.json();
+    
+    if(!response.ok) {
+      console.log('could not register')
+      return ;
+    }
+
+    // else set the auth token.
+    Cookies.set('auth-token', responseData.authToken);
+    dispatch(authActions.loginSuccess({user: responseData.user}));
+    navigate('/');
+  }
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
 
@@ -28,8 +51,7 @@ export default function Signup() {
         password: data.get('password'),
     }
 
-    dispatch(registerUser(formFields))
-    navigate('/')
+    await registerUser(formFields)
   };
 
   return (

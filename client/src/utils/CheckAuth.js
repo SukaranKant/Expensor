@@ -8,6 +8,7 @@ const CheckAuth = (props) => {
   
   if (!isAuthenticated) {
     navigate('/login');
+    return ;
   }
   
   return (
