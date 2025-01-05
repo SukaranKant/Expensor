@@ -14,8 +14,6 @@ const PORT = process.env.PORT
 
 const app = express();
 
-
-
 // Use the body-parser middleware to parse the request body
 app.use(bodyParser.json());
 app.use(express.json())
@@ -26,24 +24,24 @@ passportConfig(passport);
 app.use('/auth', authRoutes)
 app.use('/transaction', transactionRoutes)
 
-function connectToDatabase() {
-    try {
-     const username = process.env.MONGODB_USERNAME;
-     const password = process.env.MONGODB_PASSWORD;
-     const dbUrl = process.env.MONGODB_URL;
+const uri = "mongodb+srv://sukaran:sukaran@cluster0.vr9zx.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
 
-    mongoose.set("strictQuery", false);
-    mongoose.connect(`mongodb+srv://${username}:${password}@${dbUrl}/?retryWrites=true&w=majority`, {
+
+const connectDB = async () => {
+  try {
+    await mongoose.connect(uri, {
       useNewUrlParser: true,
-      useUnifiedTopology: true
+      useUnifiedTopology: true,
     });
-    console.log('Connected to MongoDB');
-  } catch (error) {
-    console.log('Error connecting to MongoDB:', error);
+    console.log("successfully connected to MongoDB!");
   }
-}
+  catch (error) {
+    console.error('Error connecting to MongoDB:', error);
+    process.exit(1); // Exit the process with failure
+  }
+};
 
-connectToDatabase();
+connectDB();
 
 
 // Set up a route that responds to a POST request to the '/users' path
